@@ -1,27 +1,34 @@
 package concurrent_programming;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 public class ChannelImpl implements Channel{
 	
-	private int capacidade;
+	private BlockingQueue<String> buffer;
 	
 	public ChannelImpl(int capacidade) {
-		this.capacidade = capacidade;
-	}
-	
-	public int getCapacidade() {
-		return capacidade;
+		this.buffer = new ArrayBlockingQueue<String>(capacidade, true);
 	}
 
 	@Override
 	public void putMessage(String message) {
-		// TODO Auto-generated method stub
-		
+		try {
+			this.buffer.put(message);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public String takeMessage() {
-		// TODO Auto-generated method stub
-		return null;
+			String message = null;
+		try {
+			message = this.buffer.take();
+		} catch (InterruptedException e) {
+ 			e.printStackTrace();
+		}
+		return message;
 	}
 
 }
