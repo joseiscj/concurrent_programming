@@ -1,4 +1,4 @@
-package concurrent_programming;
+package channel;
 
 public interface Channel {
 	
