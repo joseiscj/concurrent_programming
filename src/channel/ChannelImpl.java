@@ -15,14 +15,34 @@ public class ChannelImpl implements Channel{
 
 	@Override
 	public void putMessage(String message) {
-		if (!(this.buffer.size() + 1 > capacidade)) {
-			this.buffer.add(message);
-		}
-	}
+        while (true) {
+            synchronized (this.buffer) {
+                while (this.buffer.size() == this.capacidade) {
+                    try {
+                        this.buffer.wait();
+                    } catch (InterruptedException e) { }
+                }
+                
+                this.buffer.add(message);
+                this.buffer.notifyAll();
+            }
+        }
+    }
+	
 
 	@Override
 	public String takeMessage() {
-		return this.buffer.poll();
-	}
+		while (true) {
+            synchronized (this.buffer) {
+                while (this.buffer.isEmpty()) {
+                    try {
+                        this.buffer.wait();
+                    } catch (InterruptedException e) { }
+                }
+                this.buffer.notifyAll();
+                return this.buffer.poll();
+            }
+        }
+    }
 
 }

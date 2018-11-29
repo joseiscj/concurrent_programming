@@ -4,10 +4,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
+import channel.Channel;
+import channel.ChannelImpl;
+
 public class Main {
 	private static final int QUANTIDADE_STRINGS_GERADAS = 100;
-	private static Queue<String> fila = new LinkedList<String>();
-	private static Queue<String> stringsFiltradas = new LinkedList<String>();
+	private static Channel fila = new ChannelImpl(QUANTIDADE_STRINGS_GERADAS);
+	private static Channel stringsFiltradas = new ChannelImpl(QUANTIDADE_STRINGS_GERADAS);
 	
 	private static String generateStrings(int length) {
 		String alphabet = new String("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"); // 9
