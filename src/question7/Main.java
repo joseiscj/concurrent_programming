@@ -1,14 +1,12 @@
 package question7;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Random;
 
 import channel.Channel;
 import channel.ChannelImpl;
 
 public class Main {
-	private static final int QUANTIDADE_STRINGS_GERADAS = 100;
+	private static final int QUANTIDADE_STRINGS_GERADAS = 50;
 	private static Channel fila = new ChannelImpl(QUANTIDADE_STRINGS_GERADAS);
 	private static Channel stringsFiltradas = new ChannelImpl(QUANTIDADE_STRINGS_GERADAS);
 	
@@ -31,7 +29,7 @@ public class Main {
 		public void run() {
 			for (int i = 0; i < QUANTIDADE_STRINGS_GERADAS; i++) {
 				String strGenerated = generateStrings(4); //AQUI VC INDICA O TAMANHO DA STRING A SER GERADA
-				fila.add(strGenerated);
+				fila.putMessage(strGenerated);;
 			}
 		}
 	};
@@ -41,9 +39,9 @@ public class Main {
 		@Override
 		public void run() {
 			for (int i = 0; i < QUANTIDADE_STRINGS_GERADAS; i++) {
-				String element = fila.poll();
+				String element = fila.takeMessage();
 				if (element.matches("[A-Za-z]+")) {
-					stringsFiltradas.add(element);
+					stringsFiltradas.putMessage(element);
 				}
 			}
 		}
@@ -55,7 +53,7 @@ public class Main {
 		public void run() {
 			int limite = stringsFiltradas.size();
 			for (int i = 0; i < limite; i++) {
-				String str = stringsFiltradas.poll();
+				String str = stringsFiltradas.takeMessage();
 				System.out.println("elemento filtrado: " + str);
 			}
 		}
@@ -67,12 +65,11 @@ public class Main {
 		Thread thread3 = new Thread(t3);
 		
 		thread1.start();
-		thread1.join();
-		
 		thread2.start();
-		thread2.join();
-		
 		thread3.start();
+		
+		thread1.join();
+		thread2.join();
 		thread3.join();
 		
 		System.out.println("Programa finalizado");
