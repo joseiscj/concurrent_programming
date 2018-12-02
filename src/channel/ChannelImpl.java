@@ -7,7 +7,6 @@ public class ChannelImpl implements Channel {
 
 	private Queue<String> buffer;
 	private int capacidade;
-	private boolean closed;
 
 	public ChannelImpl(int capacidade) {
 		this.buffer = new LinkedList<String>();
@@ -35,7 +34,7 @@ public class ChannelImpl implements Channel {
 	public String takeMessage() {
 
 		synchronized (this.buffer) {
-			while (this.buffer.isEmpty() && !closed) {
+			while (this.buffer.isEmpty()) {
 				try {
 					this.buffer.wait();
 				} catch (InterruptedException e) {
@@ -50,16 +49,6 @@ public class ChannelImpl implements Channel {
 	@Override
 	public int size() {
 		return this.buffer.size();
-	}
-	
-	@Override
-	public void close() {
-		synchronized (this) {
-			if (closed) {
-				return;
-			}
-			closed = true;
-		}
 	}
 
 }

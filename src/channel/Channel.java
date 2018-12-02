@@ -5,5 +5,4 @@ public interface Channel {
 	public void putMessage(String message);
 	public String takeMessage();
 	public int size();
-	public void close();
 }

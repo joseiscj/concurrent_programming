@@ -9,7 +9,7 @@ public class ChannelMain {
 
 		@Override
 		public void run() {
-			for (int i = 0; i < 10000000; i++) {
+			for (int i = 0; i < 100000; i++) {
 				System.out.println("t1: i = " + i);
 				channel.putMessage("message thread1:" + i);
 			}
@@ -21,7 +21,7 @@ public class ChannelMain {
 
 		@Override
 		public void run() {
-			for (int i = 0; i < 10000000; i++) {
+			for (int i = 0; i < 100000; i++) {
 				String msg = channel.takeMessage();
 				System.out.println("t2 ||" + msg);
 			}

@@ -7,7 +7,7 @@ import channel.ChannelImpl;
 
 public class Main {
 	private static final int QUANTIDADE_STRINGS_GERADAS = 50;
-	private static Channel fila = new ChannelImpl(QUANTIDADE_STRINGS_GERADAS);
+	private static Channel channel = new ChannelImpl(QUANTIDADE_STRINGS_GERADAS);
 	private static Channel stringsFiltradas = new ChannelImpl(QUANTIDADE_STRINGS_GERADAS);
 	
 	private static String generateStrings(int length) {
@@ -27,9 +27,10 @@ public class Main {
 		
 		@Override
 		public void run() {
-			for (int i = 0; i < QUANTIDADE_STRINGS_GERADAS; i++) {
+			for (int i = 0; i < 20; i++) {
 				String strGenerated = generateStrings(4); //AQUI VC INDICA O TAMANHO DA STRING A SER GERADA
-				fila.putMessage(strGenerated);;
+				//System.out.println(strGenerated);
+				channel.putMessage(strGenerated);;
 			}
 		}
 	};
@@ -38,9 +39,10 @@ public class Main {
 		
 		@Override
 		public void run() {
-			for (int i = 0; i < QUANTIDADE_STRINGS_GERADAS; i++) {
-				String element = fila.takeMessage();
+			for (int i = 0; i < 20; i++) {
+				String element = channel.takeMessage();
 				if (element.matches("[A-Za-z]+")) {
+					//System.out.println("1) " + element);
 					stringsFiltradas.putMessage(element);
 				}
 			}
@@ -51,8 +53,8 @@ public class Main {
 		
 		@Override
 		public void run() {
-			int limite = stringsFiltradas.size();
-			for (int i = 0; i < limite; i++) {
+			//int limite = stringsFiltradas.size();
+			for (int i = 0; i < 20; i++) {
 				String str = stringsFiltradas.takeMessage();
 				System.out.println("elemento filtrado: " + str);
 			}

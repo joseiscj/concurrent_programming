@@ -1,7 +1,5 @@
 package question6;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Random;
 
 import channel.Channel;
@@ -18,13 +16,12 @@ public class Main {
 		@Override
 		public void run() {
 			gerador = new Random();
-			for (int i = 0; i < LIMITE_NUMEROS_GERADOS; i++) {
+			for (int i = 0; i < 10; i++) {
 				int number_generated = gerador.nextInt();
 				String number = Integer.toString(number_generated);
-				channel.putMessage(number);
 				System.out.println(number);
+				channel.putMessage(number);
 			}
-			System.out.println(" ");
 		}
 	};
 	
@@ -32,11 +29,11 @@ public class Main {
 		
 		@Override
 		public void run() {
-			for (int i = 0; i < LIMITE_NUMEROS_GERADOS; i++) {
+			for (int i = 0; i < 10; i++) {
 				String element = channel.takeMessage();
 				Integer number = Integer.parseInt(element);
 				if (number % 2 == 0) {
-					System.out.println(element);
+					System.out.println("1)" + element);
 				}
 			}
 		}
@@ -47,9 +44,9 @@ public class Main {
 		Thread thread2 = new Thread(t2);
 		
 		thread1.start();
-		thread1.join();
-		
 		thread2.start();
+		
+		thread1.join();
 		thread2.join();
 		
 		System.out.println("Programa finalizado");
