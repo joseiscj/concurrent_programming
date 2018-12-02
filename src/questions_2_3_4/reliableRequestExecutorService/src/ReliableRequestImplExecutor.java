@@ -1,8 +1,8 @@
-package src;
-
+package questions_2_3_4.reliableRequestExecutorService.src;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -11,40 +11,38 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import interfaces.Request;
-
 public class ReliableRequestImplExecutor implements Request {
 
 	private ExecutorService executor = Executors.newFixedThreadPool(3);
-	
-	// O valor "stop" será compartilhado para todas as threads de forma atômica
+
 	private volatile boolean stop = false;
-	
-	private static final String[] mirrors = {"mirror1.com", "mirror2.br", "mirror3.edu"};
+
+	private static final String[] mirrors = { "mirror1.com", "mirror2.br", "mirror3.edu" };
 	private final int MIRROR_1 = 0;
 	private final int MIRROR_2 = 1;
 	private final int MIRROR_3 = 2;
 	private final int SLEEP_2000 = 2000;
-	private final int SLEEP_30000 = 30000;
-	
+	private final int VALOR_MAX_SLEEP = 5000;
+	private Random random = new Random();
+
 	public ReliableRequestImplExecutor() { }
-	
+
 	@Override
 	public String request(String nomeServidor) {
-		
+
 		try {
 			if (nomeServidor.equals(mirrors[MIRROR_1])) {
-				Thread.sleep(this.SLEEP_30000);
+				Thread.sleep(this.random.nextInt(VALOR_MAX_SLEEP));
+			} else if (nomeServidor.equals(mirrors[MIRROR_2])) {
+				Thread.sleep(this.random.nextInt(VALOR_MAX_SLEEP));
+			} else if (nomeServidor.equals(mirrors[MIRROR_3])) {
+				Thread.sleep(this.random.nextInt(VALOR_MAX_SLEEP));
 			}
-			else if (nomeServidor.equals(mirrors[MIRROR_2]))
-				Thread.sleep(this.SLEEP_2000);
-			else if (nomeServidor.equals(mirrors[MIRROR_3]))
-				Thread.sleep(this.SLEEP_2000);
 		} catch (InterruptedException e) { }
-		
+
 		return nomeServidor;
 	}
-	
+
 	@Override
 	public String reliableRequest() {
 
@@ -59,11 +57,11 @@ public class ReliableRequestImplExecutor implements Request {
 		}
 		return null;
 	}
-	
-	// Questão 3
-	
+
+	// Questao 3
+
 	private List<Callable<String>> createRequests() {
-		
+
 		Callable<String> request1 = () -> {
 			return request(mirrors[MIRROR_1]);
 		};
@@ -80,9 +78,9 @@ public class ReliableRequestImplExecutor implements Request {
 		tasks.add(request3);
 		return tasks;
 	}
-	
+
 	public String reliableRequestTime() throws Exception {
-		
+
 		List<Callable<String>> tasks = createRequests();
 		try {
 			String result = executor.invokeAny(tasks, this.SLEEP_2000, TimeUnit.MILLISECONDS);
@@ -90,63 +88,72 @@ public class ReliableRequestImplExecutor implements Request {
 			return result;
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			executor.shutdown();
-			System.out.println("A mensagem => " + e.getMessage());
+			System.out.println("Erro acima devido a requisicao demorar mais que dois segundos.");
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	// Questão 4
-	
+	// Questao 4
+
 	public void reliableRequestEvent() {
-		
+
 		Thread entradaUsuario = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				Scanner sc = new Scanner(System.in);
-				
+
 				while (!stop)
 					stop = sc.nextLine().equalsIgnoreCase("S");
-				
+
 				sc.close();
 
 			}
 		});
-		
+
 		Thread executaResposta = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				
+
 				System.out.println("Para parar, digite \"s\"!");
 				System.lineSeparator();
-				
+
 				while (!stop) {
 					try {
 						System.out.println(reliableRequestTime());
 						executor = Executors.newFixedThreadPool(3);
 					} catch (Exception e) {
-						System.out.println("A mensagem => " + e.getMessage());
 						e.printStackTrace();
 					}
 				}
 			}
-			
+
 		});
 		executaResposta.start();
 		entradaUsuario.start();
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		
+
 		ReliableRequestImplExecutor requisicao = new ReliableRequestImplExecutor();
-		
+
 		try {
-			//System.out.println("Mirror used: " + requisicao.reliableRequestTime());
-				System.out.println("Mirror utilizado: " + requisicao.reliableRequest());
-			
-//			resposta.reliableRequestEvent();
+
+			// Vale lembrar que, para testar, temos que executar as linahs correspondentes a
+			// uma questao, apenas.
+
+			// Para executar a questao 3, descomente as tres primeiras linhas abaixo...
+//			String mirror = requisicao.reliableRequestTime();
+//			if (mirror != null)
+//				System.out.println("Mirror used: " + mirror);
+
+			// Para executar a questao 2, descomente a linha abaixo...
+//			 System.out.println("Mirror utilizado: " + requisicao.reliableRequest());
+
+			// Para executar a questao 4, descomente a linha abaixo...
+			 requisicao.reliableRequestEvent();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package question6;
+package question_6;
 
 import java.util.Random;
 
