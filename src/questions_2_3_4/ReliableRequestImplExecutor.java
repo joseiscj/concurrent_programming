@@ -27,6 +27,7 @@ public class ReliableRequestImplExecutor implements Request {
 
 	public ReliableRequestImplExecutor() { }
 
+	
 	@Override
 	public String request(String nomeServidor) {
 
@@ -43,6 +44,8 @@ public class ReliableRequestImplExecutor implements Request {
 		return nomeServidor;
 	}
 
+	// Questao 2
+	
 	@Override
 	public String reliableRequest() {
 
