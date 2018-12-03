@@ -1,4 +1,4 @@
-package questions_2_3_4.reliableRequestExecutorService.src;
+package questions_2_3_4;
 
 public interface Request {
 	

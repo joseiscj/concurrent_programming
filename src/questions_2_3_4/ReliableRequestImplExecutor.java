@@ -1,4 +1,4 @@
-package questions_2_3_4.reliableRequestExecutorService.src;
+package questions_2_3_4;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,7 +153,7 @@ public class ReliableRequestImplExecutor implements Request {
 //			 System.out.println("Mirror utilizado: " + requisicao.reliableRequest());
 
 			// Para executar a questao 4, descomente a linha abaixo...
-			 requisicao.reliableRequestEvent();
+//			 requisicao.reliableRequestEvent();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
