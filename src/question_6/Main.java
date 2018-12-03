@@ -7,19 +7,20 @@ import channel.ChannelImpl;
 
 public class Main {
 	
-	private static final int LIMITE_NUMEROS_GERADOS = 5;
+	private static final int LIMITE_NUMEROS = 5;
 	private static Random gerador;
-	private static Channel channel = new ChannelImpl(LIMITE_NUMEROS_GERADOS);
+	private static Channel channel = new ChannelImpl(LIMITE_NUMEROS);
 	
 	private static Runnable t1 = new Runnable() {
 		
 		@Override
 		public void run() {
 			gerador = new Random();
-			for (int i = 0; i < 10; i++) {
+			//o limite do for indica por quanto tempo (quantidade de iteracoes)
+			//se deseja rodar o canal
+			for (int i = 0; i < 10; i++) { 
 				int number_generated = gerador.nextInt();
 				String number = Integer.toString(number_generated);
-				System.out.println(number);
 				channel.putMessage(number);
 			}
 		}
@@ -33,7 +34,7 @@ public class Main {
 				String element = channel.takeMessage();
 				Integer number = Integer.parseInt(element);
 				if (number % 2 == 0) {
-					System.out.println("1)" + element);
+					System.out.println(element);
 				}
 			}
 		}
